@@ -1,1 +1,1 @@
-{"root":["./api/index.ts"],"version":"5.8.2"}
+{"root":["./api/index.ts","./api/validate/validator.ts"],"version":"5.8.2"}
