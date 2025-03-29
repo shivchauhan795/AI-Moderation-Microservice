@@ -69,7 +69,7 @@ const Login = () => {
                 <form onSubmit={(e) => handleLogin(e)} className="flex flex-col justify-center items-center gap-5 p-5 w-3/4">
                     <input ref={emailRef} type="email" placeholder="Email" className="w-full mx-16 border rounded-lg p-2" />
                     <input ref={passwordRef} type="password" placeholder="Password" className="w-full mx-16 border rounded-lg p-2" />
-                    <button type="submit" className="border py-1 px-3 rounded-md cursor-pointer">Login</button>
+                    <button type="submit" className="border py-1 px-3 rounded-md cursor-pointer bg-green-300">Login</button>
                 </form>
                 <div className="flex gap-3 items-center justify-center">
                     <h4>Don't have an account?</h4>

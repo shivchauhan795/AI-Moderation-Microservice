@@ -73,7 +73,7 @@ const Signup = () => {
                     <input ref={nameRef} type="text" placeholder="Name" className="w-full mx-16 border rounded-lg p-2" />
                     <input ref={emailRef} type="email" placeholder="Email" className="w-full mx-16 border rounded-lg p-2" />
                     <input ref={passwordRef} type="password" placeholder="Password" className="w-full mx-16 border rounded-lg p-2" />
-                    <button type="submit" className="border py-1 px-3 rounded-md cursor-pointer">Signup</button>
+                    <button type="submit" className="border py-1 px-3 rounded-md cursor-pointer bg-green-300">Signup</button>
                 </form>
                 <div className="flex gap-3 items-center justify-center">
                     <h4>Already have an account?</h4>

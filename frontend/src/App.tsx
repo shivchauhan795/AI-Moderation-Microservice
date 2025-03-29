@@ -66,11 +66,11 @@ function App() {
         position="top-center"
         reverseOrder={false}
       />
-      <h1 className="text-3xl font-bold uppercase pt-3">
+      <h1 className="text-3xl font-bold uppercase pt-3 fixed top-0">
         Posts
       </h1>
-
-      <div className="h-fit w-1/3 p-5 rounded-2xl flex flex-col justify-center items-center self-center mb-10 gap-10">
+      <button onClick={() => { localStorage.removeItem("moderator_token"); window.location.reload() }} className="border px-2 py-1 fixed right-0 top-0 mr-3 mt-3 rounded bg-red-400 font-semibold uppercase">Logout</button>
+      <div className="h-fit w-1/3 p-5 rounded-2xl flex flex-col justify-center items-center self-center mt-20 mb-10 gap-10">
         {posts.map((post: any) => (
           <div key={post.id} className="w-96 flex flex-col h-fit bg-green-300 shadow-2xl border-2 justify-center items-center rounded-md py-3">
             <div className="text-sm font-semibold flex self-start px-3 py-1 uppercase">
