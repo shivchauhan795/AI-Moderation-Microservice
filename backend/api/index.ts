@@ -125,7 +125,7 @@ app.post('/login', async (req, res) => {
 
         const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: '1d' });
 
-        res.status(200).json({ token });
+        res.status(200).json({ message: "Logged in successfully!", token });
     } catch (e) {
         res.status(500).json({ message: 'Internal server error' });
     }
@@ -164,6 +164,7 @@ app.post('/post', middleware, async (req: any, res) => {
 // post endpoint for posting a comment
 app.post('/comment', middleware, async (req: any, res) => {
     try {
+        console.log(req.body);
         const { content, postId } = req.body;
         const userId = req.user.id;
 
@@ -230,7 +231,12 @@ app.get('/posts', middleware, async (req, res) => {
     try {
         const posts = await prisma.post.findMany({
             include: {
-                comments: true
+                comments: {
+                    include: {
+                        user: true
+                    }
+                },
+                user: true
             }
         });
         res.status(200).json({ posts });
