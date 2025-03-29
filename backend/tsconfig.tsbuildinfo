@@ -1,1 +1,1 @@
-{"root":["./api/index.ts","./api/validate/validator.ts"],"version":"5.8.2"}
+{"root":["./api/index.ts","./api/controllers/authcontroller.ts","./api/controllers/usercontroller.ts","./api/middleware/authmiddleware.ts","./api/moderator/moderator.ts","./api/routes/authroutes.ts","./api/routes/userroutes.ts","./api/validator/validator.ts"],"version":"5.8.2"}

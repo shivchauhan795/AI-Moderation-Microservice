@@ -25,7 +25,7 @@ const Signup = () => {
                 return;
             }
             else {
-                const response = await fetch(`${backendUrl}/signup`, {
+                const response = await fetch(`${backendUrl}/api/v1/auth/signup`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

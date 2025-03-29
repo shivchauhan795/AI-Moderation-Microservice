@@ -14,10 +14,12 @@ model User {
   password String
   post     Post[]
   Comments Comments[]
+  Likes    Likes[]
 }
 
 model Post {
   id       Int        @id @default(autoincrement())
+  likes    Likes[]
   content  String
   comments Comments[]
   userId   Int
@@ -32,4 +34,12 @@ model Comments {
   userId  Int
   post    Post    @relation(fields: [postid], references: [id])
   user    User    @relation(fields: [userId], references: [id])
+}
+
+model Likes {
+  id     Int  @id @default(autoincrement())
+  postid Int
+  userId Int
+  post   Post @relation(fields: [postid], references: [id])
+  user   User @relation(fields: [userId], references: [id])
 }

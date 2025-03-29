@@ -23,7 +23,7 @@ const Login = () => {
                 return;
             }
             else {
-                const response = await fetch(`${backendUrl}/login`, {
+                const response = await fetch(`${backendUrl}/api/v1/auth/login`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

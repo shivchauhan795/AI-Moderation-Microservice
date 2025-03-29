@@ -6,14 +6,16 @@ import toast, { Toaster } from "react-hot-toast";
 function App() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
   const [openCommentBox, setopenCommentBox] = useState(false);
+  const [openCreatePost, setopenCreatePost] = useState(false);
   const [posts, setPosts] = useState<any>([]);
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const commentRef = useRef<HTMLInputElement>(null);
+  const createPostRef = useRef<HTMLInputElement>(null);
   const [loading, setloading] = useState(true);
 
   async function fetchPosts() {
     try {
-      const posts = await fetch(`${backendUrl}/posts`, {
+      const posts = await fetch(`${backendUrl}/api/v1/users/posts`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -35,10 +37,54 @@ function App() {
     fetchPosts();
   }, []);
 
+  async function handleCreatePost() {
+    try {
+      await fetch(`${backendUrl}/api/v1/users/post`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `${localStorage.getItem("moderator_token")}`
+        },
+        body: JSON.stringify({
+          content: createPostRef.current?.value,
+        })
+      });
+
+      toast.success("Post created successfully!");
+
+      fetchPosts();
+      setopenCreatePost(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function handleLike(postId: any) {
+    try {
+      const response = await fetch(`${backendUrl}/api/v1/users/like`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `${localStorage.getItem("moderator_token")}`
+        },
+        body: JSON.stringify({
+          postId
+        })
+      });
+      const data = await response.json();
+
+
+      toast.success(data.message);
+
+      fetchPosts();
+      setopenCommentBox(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async function handleAddComment() {
     try {
-      console.log("inside comment handle function", commentRef, selectedPost.id);
-      const response = await fetch(`${backendUrl}/comment`, {
+      const response = await fetch(`${backendUrl}/api/v1/users/comment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +96,7 @@ function App() {
         })
       });
       const data = await response.json();
-      console.log(data);
+
       if (data.message === "Comment flagged for moderation!") {
         toast.error("Comment flagged for moderation!");
       } else {
@@ -80,6 +126,7 @@ function App() {
       <h1 className="text-3xl font-bold uppercase pt-3 fixed top-0">
         Posts
       </h1>
+      <button onClick={() => { setopenCreatePost(true) }} className="border px-2 py-1 fixed right-25 top-0 mr-3 mt-3 rounded bg-green-600 font-semibold uppercase cursor-pointer">Create Post</button>
       <button onClick={() => { localStorage.removeItem("moderator_token"); window.location.reload() }} className="border px-2 py-1 fixed right-0 top-0 mr-3 mt-3 rounded bg-red-400 font-semibold uppercase cursor-pointer">Logout</button>
       <div className="h-fit w-1/3 p-5 rounded-2xl flex flex-col justify-center items-center self-center mt-20 mb-10 gap-10">
         {posts.map((post: any) => (
@@ -92,8 +139,10 @@ function App() {
             </div>
             <div className="flex gap-5 pt-3">
               <div className="flex gap-2">
-                <button className="cursor-pointer">{Like()}</button>
-                <div>0</div>
+                <button onClick={() => {
+                  handleLike(post.id);
+                }} className="cursor-pointer">{Like()}</button>
+                <div>{post.likes?.length || 0}</div>
               </div>
               <div className="flex gap-2">
                 <button onClick={() => {
@@ -110,6 +159,27 @@ function App() {
       </div>
 
       {/* comment dialog box */}
+      {openCreatePost &&
+        <div className="bg-black/70 w-screen h-screen fixed top-0 flex justify-center items-center">
+          <div className="flex flex-col items-center w-96 h-fit pb-5 bg-white rounded-lg">
+            <div className="flex self-end mr-3 mt-1 cursor-pointer w-fit border" onClick={() => {
+              setopenCreatePost(false);
+            }}>
+              {Close()}
+            </div>
+            <div className="flex font-semibold text-xl pt-3">
+              Create Post
+            </div>
+
+            <div className="w-full p-5">
+              <input ref={createPostRef} className="border-2 border-black rounded-md px-2 py-1 w-full" type="text" placeholder="Post Content" />
+            </div>
+            <div>
+              <button onClick={() => { handleCreatePost() }} className="bg-green-400 text-black border-2 cursor-pointer rounded-md px-2 py-1">Create Post</button>
+            </div>
+          </div>
+        </div>
+      }
       {openCommentBox &&
         <div className="bg-black/70 w-screen h-screen fixed top-0 flex justify-center items-center">
           <div className="flex flex-col items-center w-96 h-fit pb-5 bg-white rounded-lg">
@@ -139,7 +209,7 @@ function App() {
               <input ref={commentRef} className="border-2 border-black rounded-md px-2 py-1 w-full" type="text" placeholder="Comment" />
             </div>
             <div>
-              <button onClick={() => { handleAddComment() }} className="bg-green-400 text-black border-2 cursor-pointer rounded-md px-2 py-1">Submit</button>
+              <button onClick={() => { handleAddComment() }} className="bg-green-400 text-black border-2 cursor-pointer rounded-md px-2 py-1">Add Comment</button>
             </div>
           </div>
         </div>
