@@ -9,6 +9,7 @@ function App() {
   const [posts, setPosts] = useState<any>([]);
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const commentRef = useRef<HTMLInputElement>(null);
+  const [loading, setloading] = useState(true);
 
   async function fetchPosts() {
     try {
@@ -23,6 +24,7 @@ function App() {
       console.log(data);
       console.log(data.posts);
       setPosts(data.posts);
+      setloading(false);
 
     } catch (e) {
       console.log(e);
@@ -60,6 +62,15 @@ function App() {
       console.log(e);
     }
   }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-black"></div> {/* Loading spinner */}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col justify-center items-center">
       <Toaster
@@ -69,7 +80,7 @@ function App() {
       <h1 className="text-3xl font-bold uppercase pt-3 fixed top-0">
         Posts
       </h1>
-      <button onClick={() => { localStorage.removeItem("moderator_token"); window.location.reload() }} className="border px-2 py-1 fixed right-0 top-0 mr-3 mt-3 rounded bg-red-400 font-semibold uppercase">Logout</button>
+      <button onClick={() => { localStorage.removeItem("moderator_token"); window.location.reload() }} className="border px-2 py-1 fixed right-0 top-0 mr-3 mt-3 rounded bg-red-400 font-semibold uppercase cursor-pointer">Logout</button>
       <div className="h-fit w-1/3 p-5 rounded-2xl flex flex-col justify-center items-center self-center mt-20 mb-10 gap-10">
         {posts.map((post: any) => (
           <div key={post.id} className="w-96 flex flex-col h-fit bg-green-300 shadow-2xl border-2 justify-center items-center rounded-md py-3">
